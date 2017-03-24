@@ -14,10 +14,20 @@ public class Database {
     private boolean connected = false;
     private Statement statement;
 
+    /**
+     * A class representing a database with the given name.
+     *
+     * @param dbName The name of the database.
+     */
     public Database(String dbName) {
         this.dbName = dbName;
     }
 
+    /**
+     * Connect to the database.
+     *
+     * @return True if the database was successfully connected to.
+     */
     public boolean connect() {
         try {
             DriverManager.registerDriver(new EmbeddedDriver());
@@ -32,6 +42,12 @@ public class Database {
         return true;
     }
 
+    /**
+     * Drop the table specified.
+     *
+     * @param tableName The table name
+     * @return True if it was able to drop the table without error.
+     */
     public boolean dropTable(String tableName) {
         if (!connected)
             return false;
@@ -47,6 +63,13 @@ public class Database {
     }
 
 
+    /**
+     * Create a table with the columns given.
+     *
+     * @param tableName The name of the table.
+     * @param entities  The entities of the table (columns)
+     * @return True if the table was created without error.
+     */
     public boolean createTable(String tableName, TableEntity... entities) {
         if (!connected)
             return false;
@@ -68,11 +91,18 @@ public class Database {
     }
 
 
-    public boolean insert(String values, String table) {
+    /**
+     * Insert values into the table.
+     *
+     * @param values    The values in order of their respective columns where strings have '' around them.
+     * @param tableName The name of the table.
+     * @return True if the values were inserted without error.
+     */
+    public boolean insert(String values, String tableName) {
         if (!connected)
             return false;
         try {
-            statement.execute("INSERT INTO " + table + " VALUES ( " + values + " )");
+            statement.execute("INSERT INTO " + tableName + " VALUES ( " + values + " )");
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -122,6 +152,11 @@ public class Database {
         }
     }
 
+    /**
+     * Close the database.
+     *
+     * @return True if the database was successfully closed.
+     */
     public boolean close() {
         try {
             statement.close();
